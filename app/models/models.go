@@ -2,12 +2,33 @@
 
 package models
 
+//This is for Mysql
 // Student represents the student entity
 type Student struct {
-	ID             string   `json:"id"`
-	Name           string   `json:"name"`
-	RollNo         string   `json:"rollno"`
-	Class          string   `json:"class"`
-	OptionalSubjec []string `json:"optional_subjects"`
-	Rank           int      `json:"rank"`
+	ID               uint     `json:"id" gorm:"primarykey"`
+	Name             string   `json:"name"`
+	RollNo           string   `json:"rollno"`
+	Class            string   `json:"class"`
+	OptionalSubjects []string `json:"optional_subjects" gorm:"type:json"`
+	StudentRank      int      `json:"student_rank"` // Renamed from "Rank" to "StudentRank"
 }
+
+// This is working for mongoDB
+// type Student struct {
+// 	ID               string   `json:"id"`
+// 	Name             string   `json:"name"`
+// 	RollNo           string   `json:"rollno"`
+// 	Class            string   `json:"class"`
+// 	OptionalSubjects []string `json:"optional_subjects"`
+// 	Rank             int      `json:"rank"`
+// }
+
+// This is working for postgress sql
+// type Student struct {
+// 	ID               string   `json:"id" gorm:"primarykey"`
+// 	Name             string   `json:"name"`
+// 	RollNo           string   `json:"rollno"`
+// 	Class            string   `json:"class"`
+// 	OptionalSubjects []string `json:"optional_subjects" gorm:"type:text[]"` // I'm getting error here
+// 	Rank             int      `json:"rank"`
+// }

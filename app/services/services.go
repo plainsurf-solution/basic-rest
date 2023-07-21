@@ -3,7 +3,6 @@
 package services
 
 import (
-	"fmt"
 	"students/app/models"
 	"students/pkg/repository"
 )
@@ -27,7 +26,6 @@ func (s *StudentService) GetStudents() ([]models.Student, error) {
 
 // GetStudentByID retrieves a student by ID
 func (s *StudentService) GetStudentByID(id string) (*models.Student, error) {
-	fmt.Println("reached services")
 	return s.studentRepo.GetStudentByID(id)
 }
 

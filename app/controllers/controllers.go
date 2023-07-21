@@ -56,12 +56,14 @@ func (c *StudentController) CreateStudent(w http.ResponseWriter, r *http.Request
 	var student models.Student
 	err := json.NewDecoder(r.Body).Decode(&student)
 	if err != nil {
+		fmt.Println("here", err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	err = c.studentService.CreateStudent(&student)
 	if err != nil {
+		fmt.Println("5454", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -98,6 +100,5 @@ func (c *StudentController) DeleteStudent(w http.ResponseWriter, r *http.Request
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	fmt.Println("rr", studentID, err)
 	w.WriteHeader(http.StatusNoContent)
 }

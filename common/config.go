@@ -10,10 +10,10 @@ import (
 
 // DatabaseConfig represents the configuration for the database
 type DatabaseConfig struct {
-	Type           string
-	Connection     string
-	DbName         string
-	collectionName string
+	Type       string
+	Connection string
+	// DbName         string
+	// collectionName string
 }
 
 // LoadConfig loads the configuration from the environment file
