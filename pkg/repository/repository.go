@@ -11,6 +11,8 @@ import (
 	"students/app/models"
 	"students/common"
 
+	"golang.org/x/crypto/bcrypt"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -71,14 +73,6 @@ func NewStudentRepository(dbConfig common.DatabaseConfig) (StudentRepository, er
 		}
 
 		return NewMySQLStudentRepository(MySQLClient), nil
-		// MySQLClient, err := sql.Open("mysql", dbConfig.Connection)
-		// if err != nil {
-		// 	panic(err.Error())
-		// }
-		// defer MySQLClient.Close()
-		// fmt.Println("Success! mySQL Database connected")
-
-		// return NewMySQLStudentRepository(MySQLClient), nil
 
 	case "DatabaseTypePostgreSQL":
 		// Initialize and return a PostgreSQL repository
@@ -168,7 +162,17 @@ func (r *MongoDBStudentRepository) CreateStudent(student *models.Student) error 
 	// ...
 	ctx := context.TODO()
 
-	_, err := r.collection.InsertOne(ctx, student)
+	// Hash the password using bcrypt
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(student.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+
+	// Replace the plain-text password with the hashed password
+	student.Password = string(hashedPassword)
+
+	// Store the updated student object in the MongoDB collection
+	_, err = r.collection.InsertOne(ctx, student)
 	if err != nil {
 		return err
 	}
