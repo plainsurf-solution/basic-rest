@@ -2,14 +2,28 @@
 
 package models
 
+import "go.mongodb.org/mongo-driver/bson/primitive"
+
+// type Student struct {
+// 	ID               uint     `json:"id" gorm:"primarykey"`
+// 	Email            string   `json:"email"`
+// 	Password         string   `json:"password"`
+// 	Name             string   `json:"name"`
+// 	RollNo           string   `json:"rollno"`
+// 	Class            string   `json:"class"`
+// 	OptionalSubjects []string `json:"optional_subjects"`
+// 	StudentRank      int      `json:"student_rank"`
+// }
+
 type Student struct {
-	ID               uint     `json:"id" gorm:"primarykey"`
+	ID               uint     `json:"id" gorm:"primaryKey"`
+	MongoID          primitive.ObjectID `json:"mongo_id" bson:"_id,omitempty" gorm:"-"`
 	Email            string   `json:"email"`
 	Password         string   `json:"password"`
 	Name             string   `json:"name"`
 	RollNo           string   `json:"rollno"`
 	Class            string   `json:"class"`
-	OptionalSubjects []string `json:"optional_subjects"`
+	OptionalSubjects string `json:"optional_subjects"`
 	StudentRank      int      `json:"student_rank"`
 }
 

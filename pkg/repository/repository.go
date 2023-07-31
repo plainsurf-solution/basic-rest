@@ -19,6 +19,8 @@ import (
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+
+	"github.com/go-redis/redis/v8"
 )
 
 // StudentRepository provides an interface to interact with the student data store
@@ -81,7 +83,21 @@ func NewStudentRepository(dbConfig common.DatabaseConfig) (StudentRepository, er
 		}
 		PostgreSQLClient.AutoMigrate(&models.Student{}) // This will sync tables of database and struct and matches the feilds
 		return NewPostgreSQLStudentRepository(PostgreSQLClient), nil
-
+	case "DatabaseTypeRedis":
+		// Initialize and return a Redis repository
+		redisClient := redis.NewClient(&redis.Options{
+			Addr:     dbConfig.Connection,
+			Password: "", // If your Redis instance has authentication enabled, provide the password here
+			DB:       0,  // Use default DB
+		})
+	
+		// Check the connection
+		_, err := redisClient.Ping(context.Background()).Result()
+		if err != nil {
+			return nil, err
+		}
+	
+		return NewRedisStudentRepository(redisClient), nil
 	default:
 		return nil, errors.New("unsupported database type")
 	}
