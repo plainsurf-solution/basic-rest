@@ -106,29 +106,47 @@ func (r *MongoDBStudentRepository) CreateStudent(student *models.Student) error 
 }
 
 // UpdateStudent updates a student in the MongoDB repository
+// func (r *MongoDBStudentRepository) UpdateStudent(student *models.Student) error {
+// 	// MongoDB-specific implementation to update a student
+// 	// ...
+// 	ctx := context.TODO()
+
+// 	filter := bson.M{"id": student.ID}
+
+// 	update := bson.M{
+// 		"$set": bson.M{
+// 			"name":   student.Name,
+// 			"id":     student.ID,
+// 			"roolno": student.RollNo,
+// 			"class":  student.Class,
+// 		},
+// 	}
+
+// 	_, err := r.collection.UpdateOne(ctx, filter, update)
+// 	if err != nil {
+// 		return err
+// 	}
+
+// 	return nil
+// }
+
+// UpdateStudent updates a student in the MongoDB repository
 func (r *MongoDBStudentRepository) UpdateStudent(student *models.Student) error {
-	// MongoDB-specific implementation to update a student
-	// ...
-	ctx := context.TODO()
+	filter := bson.M{"_id": student.MongoID}
+	update := bson.M{"$set": bson.M{
+		"name":     student.Name,
+		"rollno":   student.RollNo,
+		"class":    student.Class,
+	}}
 
-	filter := bson.M{"id": student.ID}
-
-	update := bson.M{
-		"$set": bson.M{
-			"name":   student.Name,
-			"id":     student.ID,
-			"roolno": student.RollNo,
-			"class":  student.Class,
-		},
-	}
-
-	_, err := r.collection.UpdateOne(ctx, filter, update)
+	_, err := r.collection.UpdateOne(context.Background(), filter, update)
 	if err != nil {
 		return err
 	}
 
 	return nil
 }
+
 
 // DeleteStudent deletes a student by ID from the MongoDB repository
 func (r *MongoDBStudentRepository) DeleteStudent(id string) error {

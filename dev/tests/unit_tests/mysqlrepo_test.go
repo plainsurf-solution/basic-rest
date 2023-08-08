@@ -1,17 +1,19 @@
-package repository
+package repository_test
 
 import (
 	"testing"
 
 	"students/app/models"
+	"students/pkg/repository"
 
-	"gorm.io/driver/postgres"
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
-func setupTestDB() (*gorm.DB, error) {
-	// Replace "sqlite3.db" with the appropriate database connection string for your test environment
-	db, err := gorm.Open(postgres.Open("host=arjuna.db.elephantsql.com user=uuuwxbte password=ydMbQltQR9VRY5vSTmzdTm2EoTTmQRmI dbname=uuuwxbte port=5432 sslmode=disable"), &gorm.Config{})
+func setupTestDBMYSQL() (*gorm.DB, error) {
+	// Replace the connection details with your test MySQL database configuration
+	dsn := "root:@123jkl@tcp(localhost:3306)/studentdbtest?charset=utf8mb4&parseTime=True&loc=Local"
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	db.AutoMigrate(&models.Student{})
 	if err != nil {
 		return nil, err
@@ -19,24 +21,23 @@ func setupTestDB() (*gorm.DB, error) {
 	return db, nil
 }
 
-func TestPostgreSQLStudentRepository(t *testing.T) {
-	db, err := setupTestDB()
+func TestMySQLStudentRepository(t *testing.T) {
+	db, err := setupTestDBMYSQL()
 	if err != nil {
 		t.Fatalf("Failed to set up test database: %v", err)
 	}
-	// defer db.Close()
 
-	// Create a new PostgreSQLStudentRepository instance with the test database connection
-	repo := NewPostgreSQLStudentRepository(db)
+	// Create a new MySQLStudentRepository instance with the test database connection
+	repo := repository.NewMySQLStudentRepository(db)
 
 	// Test CreateStudent
 	student := &models.Student{
-		ID:       1,
-		Email:    "test@example.com",
-		Password: "password123",
-		Name:     "John Doe",
-		RollNo:   "12345",
-		Class:    "10A",
+		ID:          1,
+		Email:       "test@example.com",
+		Password:    "password123",
+		Name:        "John Doe",
+		RollNo:      "12345",
+		Class:       "10A",
 		StudentRank: 1,
 	}
 	err = repo.CreateStudent(student)

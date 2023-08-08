@@ -13,7 +13,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
-	"database/sql"
+	"gorm.io/driver/mysql"
 
 	_ "github.com/go-sql-driver/mysql"
 
@@ -45,35 +45,16 @@ func NewStudentRepository(dbConfig common.DatabaseConfig) (StudentRepository, er
 
 	case "DatabaseTypeMySQL":
 		// Initialize and return a MySQL repository
-		MySQLClient, err := sql.Open("mysql", dbConfig.Connection)
-		if err != nil {
-			panic(err.Error())
-		}
-		// defer MySQLClient.Close()
-		fmt.Println("Success! mySQL Database connected")
-
-		// Manually create the 'students' table if it doesn't exist
-		createTableQuery := `
-		CREATE TABLE IF NOT EXISTS students (
-			id INT AUTO_INCREMENT PRIMARY KEY,
-			name VARCHAR(255) NOT NULL,
-			email VARCHAR(255) NOT NULL,
-			password VARCHAR(255) NOT NULL,
-			rollno VARCHAR(20) NOT NULL,
-			class VARCHAR(50) NOT NULL,
-			optional_subjects JSON,
-			student_rank INT
-		  );
-		  
-`
-
-		_, err = MySQLClient.Exec(createTableQuery)
-		if err != nil {
-			fmt.Println(err,"err")
-			panic(err.Error())
-		}
-
-		return NewMySQLStudentRepository(MySQLClient), nil
+		  // Initialize and return a MySQL repository
+		  MySQLClient, err := gorm.Open(mysql.Open(dbConfig.Connection), &gorm.Config{})
+		  if err != nil {
+			  panic("Failed to connect to DB")
+		  }
+	  
+		  fmt.Println("Success! MySQL Database connected")
+	  
+		  return NewMySQLStudentRepository(MySQLClient), nil
+	
 
 	case "DatabaseTypePostgreSQL":
 		// Initialize and return a PostgreSQL repository

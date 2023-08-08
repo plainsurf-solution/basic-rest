@@ -14,6 +14,7 @@ import "go.mongodb.org/mongo-driver/bson/primitive"
 // 	OptionalSubjects []string `json:"optional_subjects"`
 // 	StudentRank      int      `json:"student_rank"`
 // }
+type optional_subjects []string
 
 type Student struct {
 	ID               uint     `json:"id" gorm:"primaryKey"`
@@ -23,7 +24,7 @@ type Student struct {
 	Name             string   `json:"name"`
 	RollNo           string   `json:"rollno"`
 	Class            string   `json:"class"`
-	OptionalSubjects string `json:"optional_subjects"`
+	OptionalSubjects optional_subjects `json:"optional_subjects" gorm:"serializer:json"`
 	StudentRank      int      `json:"student_rank"`
 }
 
